@@ -23,7 +23,8 @@ A full-stack application for monitoring the accuracy of UK national wind power g
 - [Deployment](#deployment)
 - [Analysis Findings](#analysis-findings)
 - [Future Improvements](#future-improvements)
-- [AI Tooling Disclosure](#ai-tooling-disclosure)
+- [References](#references)
+
 
 ---
 
@@ -117,9 +118,6 @@ FUELHH returns 30-minute resolution data. WINDFOR returns hourly data. Before jo
 ---
 
 ## Project Structure
-
-![Folder Structure](public/folder-structure.svg)
-
 ```
 wind-forecast-monitor/
 ├── server/
@@ -342,6 +340,19 @@ Forecast errors scale with generation magnitude (slope = 0.222, R² = 0.415). Ho
 
 ---
 
-## AI Tooling Disclosure
+## References
 
-Claude (Anthropic), Gemini were used as a development assistant during the building of this project.
+Documentation and resources consulted during development:
+
+- [BMRS API documentation](https://bmrs.elexon.co.uk/api-documentation) — endpoint reference for FUELHH and WINDFOR, parameter names, response shapes
+- [Elexon Developer Portal](https://developer.data.elexon.co.uk/) — dataset catalogue and field definitions
+- [Recharts documentation](https://recharts.org/en-US/api) — `ComposedChart`, `ReferenceArea`, custom `Tooltip` API
+- [Vite documentation](https://vitejs.dev/config/) — proxy configuration, environment variable handling
+- [Tailwind CSS v4 migration guide](https://tailwindcss.com/docs/v4-beta) — breaking changes from v3, `@tailwindcss/vite` plugin setup
+- [ioredis documentation](https://github.com/redis/ioredis) — connection options, error handling, `lazyConnect` behaviour
+- [react-datepicker documentation](https://reactdatepicker.com/) — v9 API
+- [Render documentation](https://render.com/docs) — Key Value store setup, internal private networking between services
+- [Vercel documentation](https://vercel.com/docs) — environment variables, build configuration for Vite
+- [Jupyter documentation](https://docs.jupyter.org) — notebook format and how outputs are stored for GitHub rendering
+- [scipy.stats documentation](https://docs.scipy.org/doc/scipy/reference/stats.html) — `linregress` return values and interpretation
+- [pandas documentation](https://pandas.pydata.org/docs/) — DataFrame operations, groupby, resampling
