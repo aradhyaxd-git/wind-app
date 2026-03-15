@@ -2,9 +2,8 @@ require("dotenv").config()
 
 const app= require('./app')
 const PORT= process.env.PORT || 3001;
+const logger= require("./src/utils/logger");
 
 app.listen(PORT, ()=>{
-    console.log("\n🌬  Wind Forecast Monitor — server");
-  console.log(`http://localhost:${PORT}/api/health`);
-  console.log(`ENV: ${process.env.NODE_ENV || "development"}\n`);
-})
+  logger.info({ port: PORT, env: process.env.NODE_ENV || "development" }, "Server started");
+});

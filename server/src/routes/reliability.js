@@ -2,17 +2,19 @@ const express = require("express");
 const router = express.Router();
 const cache = require("../services/cache");
 const bmrs = require("../services/bmrs");
+const logger= require("../utils/logger");
 
 router.get("/", async (req, res) => {
-  const CACHE_KEY = "wfm:reliability:jan2024";
-
+  const CACHE_KEY = process.env.CACHE_KEY;
   const cached = await cache.get(CACHE_KEY);
   if (cached) {
+    logger.info({ hit: true }, "GET /api/reliability");
     res.set("X-Cache", "HIT");
     return res.json(cached);
   }
 
   try {
+    logger.info({ from: FROM, to: TO }, "GET /api/reliability — fetching BMRS");
     const fromMs = new Date("2024-01-01T00:00:00Z").getTime();
     const toMs= new Date("2024-01-31T23:59:59Z").getTime();
 
@@ -33,9 +35,11 @@ router.get("/", async (req, res) => {
 
     
     await cache.set(CACHE_KEY, result);
+    logger.info({ totalSlots: values.length }, "GET /api/reliability — done");
     res.set("X-Cache", "MISS");
     res.json(result);
   } catch (err) {
+    logger.error({ err: err.message }, "GET /api/reliability — failed");
     res.status(502).json({ error: "Failed to fetch reliability data", detail: err.message });
   }
 });

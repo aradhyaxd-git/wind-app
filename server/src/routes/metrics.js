@@ -2,6 +2,7 @@ const express = require("express");
 const router= express.Router();
 const cache = require("../services/cache");
 const bmrs = require("../services/bmrs");
+const logger= require("../utils/logger");
 const { buildDataPoints, computeMetrics } = require("../utils/errorEngine");
 
 router.get("/", async (req, res) => {
@@ -19,10 +20,12 @@ router.get("/", async (req, res) => {
   const cached= await cache.get(cacheKey);
 
   if (cached) {
+    logger.info({ cacheKey, hit: true }, "GET /api/metrics");
     return res.json({ metrics: cached.metrics });
   }
 
   try {
+    logger.info({ from, to, horizon }, "GET /api/metrics — fetching BMRS");
     const [actuals, forecasts] = await Promise.all([
       bmrs.fetchActuals(fromMs, toMs),
       bmrs.fetchForecasts(fromMs, toMs),
@@ -33,6 +36,7 @@ router.get("/", async (req, res) => {
     await cache.set(cacheKey, { dataPoints, metrics });
     res.json({ metrics });
   } catch (err) {
+    logger.error({ err: err.message }, "GET /api/metrics — failed");
     res.status(502).json({ error: "Failed to fetch from BMRS", detail: err.message });
   }
 });

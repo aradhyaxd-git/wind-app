@@ -1,5 +1,6 @@
 const Redis = require("ioredis");
 const TTL = parseInt(process.env.CACHE_TTL_SECONDS ?? "3600", 10);
+const logger= require("../utils/logger");
 
 let client = null;
 let connected = false;
@@ -16,16 +17,16 @@ function connect() {
 
   client.on("connect", () => {
     connected = true;
-    console.log("✓ Redis connected");
+    logger.info("Redis connected");
   });
 
   client.on("error", (err) => {
-    if (connected) console.warn("⚠  Redis error:", err.message);
+    if (connected) console.warn("Redis error:", err.message);
     connected = false;
   });
 
   client.connect().catch(() => {
-    console.warn("Redis unavailable — running without cache");
+    logger.warn("Redis unavailable — running without cache");
   });
 }
 
@@ -64,7 +65,7 @@ async function flush() {
   try {
     const keys = await client.keys("wfm:*");
     if (keys.length) await client.del(...keys);
-    console.log(`Flushed ${keys.length} cache keys`);
+    logger.info({ count: keys.length }, "Cache flushed");
   } catch {}
 }
 
