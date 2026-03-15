@@ -1,7 +1,9 @@
 import axios from "axios";
-
-const client = axios.create({ baseURL: "/api" });
-export async function fetchData(from, to, horizon = 4) {
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+ 
+const client = axios.create({ baseURL: `${BASE_URL}/api` });
+ 
+export async function fetchData(from, to, horizon = 24) {
   const { data } = await client.get("/data", {
     params: { from, to, horizon },
   });
