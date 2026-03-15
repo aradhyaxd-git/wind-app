@@ -1,4 +1,4 @@
-import Dashboard from "@/pages/Dashboard.jsx";
+import Dashboard from "@/pages/DashBoard.jsx";
 
 export default function App() {
   return <Dashboard />;
